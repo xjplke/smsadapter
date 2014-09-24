@@ -1,12 +1,15 @@
 package main
 
 import (
+    "flag"
+    "path/filepath"
     "github.com/ant0ine/go-json-rest/rest"
     "log"
     "net/http"
     "strconv"
     "github.com/Unknwon/goconfig"
     "github.com/xjplke/smsadapter/sms"
+    "fmt"
 )
 
 type Message struct {
@@ -14,7 +17,11 @@ type Message struct {
 }
 
 func main() {
-	c, err := goconfig.LoadConfigFile("sms.conf")
+	path := flag.String("config", "./smsadapter.conf", "设置配置文件的路径")	
+        flag.Parse()
+	*path = filepath.FromSlash(*path) 
+
+	c, err := goconfig.LoadConfigFile(*path)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,7 +42,7 @@ func main() {
     smssender.Init(c)
 
 	
-	
+    fmt.Println("listen on "+ip+":"+strconv.Itoa(port))	
     handler := rest.ResourceHandler{}
     errx := handler.SetRoutes(
         &rest.Route{"GET", "/message", func(w rest.ResponseWriter, req *rest.Request) {
@@ -56,5 +63,6 @@ func main() {
     }
     
     log.Fatal(http.ListenAndServe(ip+":"+strconv.Itoa(port), &handler))
+    fmt.Println("exit1") 
 }
 
