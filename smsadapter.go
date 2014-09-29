@@ -51,7 +51,7 @@ func main() {
             })
         }},
 	&rest.Route{"GET","/sms/send",func(w rest.ResponseWriter,req *rest.Request){
-            w.Header().Set("Content-Type","text/json; charset=utf-8")
+            w.Header().Set("Content-Type","Application/json; charset=utf-8")
             phone := req.FormValue("phone")  
             password := req.FormValue("password")  
 	    rsp := smssender.Send(phone,password)
